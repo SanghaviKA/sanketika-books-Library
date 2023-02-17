@@ -1,7 +1,6 @@
 import React from "react";
 import { Form, Input, Button } from "antd";
 import axios from "axios";
-// import { json } from "react-router-dom";
 
 const BookRegistration = () => {
   const [form] = Form.useForm();
@@ -62,5 +61,4 @@ const BookRegistration = () => {
 export default BookRegistration;
 
 
-// give me a back end code for this form 
-// in node json.
+
