@@ -20,10 +20,9 @@ const getReturnValidation = (entered_studentId, entered_bookid) => {
   return `SELECT * FROM bookassign where student_id = ${entered_studentId} and book_id = '${entered_bookid}' and action ='bookassign';`;
 };
 
-// const setStatus=(entered_bookid)=>{
-// return `UPDATE books SET status = 'not_available' WHERE book_id = (SELECT book_id FROM bookassign WHERE book_id = '${entered_bookid}' AND action = 'bookassign');`;
-// }
-
+const getBookAssignment = (entered_studentId, entered_bookid) => {
+  return `SELECT * FROM bookassign WHERE student_id = ${entered_studentId} AND book_id = '${entered_bookid}' AND action = 'bookassign';`;
+};
 
 module.exports = {
   readRecord,
@@ -35,8 +34,5 @@ module.exports = {
   getSearchQuery,
   getStudent,
   getReturnValidation,
-  // setStatus
+  getBookAssignment,
 };
-
-
-
