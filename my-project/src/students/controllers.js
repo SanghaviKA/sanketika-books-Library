@@ -2,7 +2,6 @@ const { DatabaseError } = require("pg");
 const pool = require("../../db");
 const queries = require("./queries");
 const _ = require("lodash");
-// const { genActionStyle } = require("antd/es/alert/style");
 
 const ReadRecord = (req, res) => {
   const tableName = req.query.tableName;
@@ -37,11 +36,9 @@ const AddStudentsRecord = (req, res) => {
     newRecord.branch,
     newRecord.semester,
   ];
-  console.log(newRecord);
 
   pool.query(queryText, values, (error, results) => {
     if (error) {
-      console.log(error);
       res.status(500).send("Error adding record");
     } else {
       if (results.rowCount === 0) {
@@ -67,7 +64,6 @@ const AddBooksRecord = (req, res) => {
     newRecord.semester,
     "available",
   ];
-  console.log(newRecord);
 
   pool.query(queryText, values, (error, results) => {
     if (error) {
@@ -120,27 +116,6 @@ const AddBookAssignRecord = (req, res) => {
       newRecord.book_id,
       newRecord.student_id,
     ];
-
-    // if (newRecord.action === "return") {
-    //   updateBooksQuery = `update books set status = 'available' where book_id = '${newRecord.book_id}';`;
-    //   queryText = `INSERT INTO ${tableName} (book_id, student_id, action, return_date) VALUES ($1, $2, $3, $4)`;
-
-    //   values = [
-    //     newRecord.book_id,
-    //     newRecord.student_id,
-    //     newRecord.action,
-    //     newRecord.return_date,
-    //   ];
-
-    // } else if (newRecord.action === "renewal") {
-    //   updateBooksQuery = `update books set status = 'not_available' where book_id = '${newRecord.book_id}';`;
-    //   queryText = `INSERT INTO ${tableName} (book_id, student_id, action,no_days_extend) VALUES ($1, $2, $3, $4)`;
-    //   values = [
-    //     newRecord.book_id,
-    //     newRecord.student_id,
-    //     newRecord.action,
-    //     newRecord.no_days_extend,
-    //   ];
   } else if (newRecord.action === "renewal") {
     updateBooksQuery = `update books set status = 'available' where book_id = '${newRecord.book_id}';`;
     queryText = `UPDATE ${tableName} SET action = $1, no_days_extend = $2 WHERE book_id = $3 AND student_id = $4;`;
@@ -151,7 +126,6 @@ const AddBookAssignRecord = (req, res) => {
       newRecord.student_id,
     ];
   } else {
-    console.log("students " + JSON.stringify(studentQuery));
     updateBooksQuery = `update books set status = 'available' where book_id = '${newRecord.book_id}';`;
     queryText = `INSERT INTO ${tableName} (student_id, action, number_of_days, assign_date, book_id) VALUES ($1, $2, $3, $4,$5)`;
     values = [
@@ -167,7 +141,6 @@ const AddBookAssignRecord = (req, res) => {
       res.status(500).send("Error in fetching students details");
     } else {
       if (result.rows.length > 0) {
-        console.log("query" + BookRenewalStatusQuery);
         if (newRecord.action !== "bookassign") {
           pool.query(BookRenewalStatusQuery, (err, suc) => {
             if (err) {
@@ -178,27 +151,25 @@ const AddBookAssignRecord = (req, res) => {
               if (suc.rows.length > 0) {
                 pool.query(queryText, values, (error, results) => {
                   if (error) {
-                    console.log(error);
                     res.status(500).send("Error adding record");
                   } else {
                     if (newRecord.action === "bookassign") {
-                      pool.query(updateBooksQuery, [], (error, results) => {
-                        if (error) {
-                          console.log(error);
-                          res.status(500).send("Error adding record");
-                        } else {
-                          res.status(200).send("Record added successfully");
-                        }
-                      });
-
-                      pool.query(studentStatus, (error, res) => {
-                        if (error) {
-                          console.log(error);
-                          res.status(500).send("error");
-                        } else {
+                      const query = `select * from bookassign where student_id = '${newRecord.student_id}' and book_id = '${newRecord.book_id}';`;
+                      pool.query(query, (err, response) => {
+                        if (response.rows.length > 0) {
                           res
-                            .status(200)
-                            .send("status updated with not available");
+                            .status(500)
+                            .send(
+                              "The book is already assigned to the student"
+                            );
+                        } else {
+                          pool.query(updateBooksQuery, [], (error, results) => {
+                            if (error) {
+                              res.status(500).send("Error adding record");
+                            } else {
+                              res.status(200).send("Record added successfully");
+                            }
+                          });
                         }
                       });
                     } else {
@@ -216,12 +187,21 @@ const AddBookAssignRecord = (req, res) => {
             }
           });
         } else {
-          pool.query(queryText, values, (error, results) => {
-            if (error) {
-              console.log(error);
-              res.status(500).send("Error adding record");
+          const query = `select * from bookassign where student_id = '${newRecord.student_id}' and book_id = '${newRecord.book_id}';`;
+          pool.query(query, (err, response) => {
+            if (response.rows.length > 0) {
+              res
+                .status(500)
+                .send("The book is already assigned to the student");
             } else {
-              res.status(200).send("Record added successfully");
+              pool.query(queryText, values, (error, results) => {
+                if (error) {
+                  console.log(error);
+                  res.status(500).send("Error adding record");
+                } else {
+                  res.status(200).send("Record added successfully");
+                }
+              });
             }
           });
         }
