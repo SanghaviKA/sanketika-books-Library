@@ -1,24 +1,35 @@
 import React, { useState } from "react";
-
 import { Layout, Form } from "antd";
-
-import BookRegistration from "./BookRegistration";
-import StudentRegistration from "./StudentRegistration";
-import Actions from "./Actions";
+import { useNavigate } from "react-router-dom";
 import logo from "./Sanketika-logo.jpeg";
 
 const { Content } = Layout;
 
 const BooksLibrary = () => {
+  const navigate = useNavigate();
   const [selectedRegistration, setSelectedRegistration] = useState("");
   const [selectedAction, setSelectedAction] = useState("");
 
   const handleRegistrationChange = (event) => {
     setSelectedRegistration(event.target.value);
     setSelectedAction("");
+    if (event.target.value === "book-registration") {
+      navigate("/book-registration");
+    } else if (event.target.value === "student-registration") {
+      navigate("/student-registration");
+    }
   };
   const handleActionChange = (event) => {
     setSelectedAction(event.target.value);
+    if (event.target.value === "assign-book") {
+      navigate("/Action");
+    } else if (event.target.value === "view-books") {
+      navigate("/book-details");
+    } else if (event.target.value === "view-students") {
+      navigate("/student-details");
+    } else if (event.target.value === "view-book-assigned") {
+      navigate("/book-assign");
+    }
   };
 
   return (
@@ -87,22 +98,15 @@ const BooksLibrary = () => {
               >
                 <option value="">Select an option</option>
                 <option value="assign-book">Assign Book</option>
-                {/* <option value="renewal">Renewal</option> */}
-                {/* <option value="return">Return</option> */}
+                <option value="view-books">View Books</option>
+                <option value="view-students">View Students</option>
+                <option value="view-book-assigned">View Book assign</option>
               </select>
             </div>
           </div>
-          {selectedAction === "assign-book" && <Actions />}
-          {selectedRegistration === "book-registration" &&
-            selectedAction !== "assign-book" && <BookRegistration />}
-          {selectedRegistration === "student-registration" &&
-            selectedAction !== "assign-book" && <StudentRegistration />}
         </Form>
       </Content>
     </Layout>
   );
 };
-
 export default BooksLibrary;
-
-// In this form when  selectedAction === "assign-book"<Action/> it should navigate to /book-registration.
