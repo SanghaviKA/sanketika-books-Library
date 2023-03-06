@@ -1,0 +1,80 @@
+.book-details-table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+  
+  .book-details-table th,
+  .book-details-table td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid rgb(85, 67, 67);
+    border-right: 1px solid  rgb(85, 67, 67);;
+    
+  }
+  
+  .book-details-table th {
+    background-color: #d0bdbd;
+    color: rgb(105, 78, 78);
+  }
+  
+  .book-details-table tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+
+
+
+  /* book registration */
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+  
+  table th,
+  table td {
+    padding: 12px;
+    text-align: left;
+    border: 1px solid rgb(209, 165, 165);
+  }
+  
+  table th {
+    background-color: #c49d9d;
+  }
+  
+  table tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+  
+  table tr:hover {
+    background-color: #ddd;
+  }
+  
+  /* student-registration */
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-bottom: 20px;
+  }
+  
+  th, td {
+    text-align: left;
+    padding: 8px;
+    border: 1px solid rgb(221, 178, 178);
+  }
+  
+  th {
+    background-color: #a58282;
+  }
+  
+  tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+  
+  tr:hover {
+    background-color: #ddd;
+  }
+  
+
+
+  
