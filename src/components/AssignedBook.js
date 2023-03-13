@@ -1,26 +1,26 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import "./AssignedBook.css";
+import { fetchBookAssign } from "./apis";
+import { NotificationService } from "./notificationService.js";
+const notification = new NotificationService();
 
 const BookDetails = () => {
   const [books, setBooks] = useState([]);
 
   useEffect(() => {
-    axios
-      .get("http://localhost:4000/api/v1/library/read?tableName=bookassign")
+    fetchBookAssign()
       .then((response) => {
-        console.log(response.data);
         setBooks(response.data);
       })
       .catch((error) => {
-        console.log(error);
+        notification.errorNotification("failed to fetch the details")
       });
   }, []);
 
   return (
     <div>
       <h2>Library books</h2>
-      <table className="book-details-table">
+      <table className="book-assign-table">
         <thead>
           <tr>
             <th>Student ID</th>

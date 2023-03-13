@@ -1,26 +1,27 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
-import "./AssignedBook.css";
+import "./bookRegister.css";
+import { fetchBooks } from "./apis";
+import { NotificationService } from "./notificationService.js";
+const notification = new NotificationService();
 
 const BookDetails = () => {
   const [books, setBooks] = useState([]);
 
   useEffect(() => {
-    axios
-      .get("http://localhost:4000/api/v1/library/read?tableName=books")
+    fetchBooks()
       .then((response) => {
-        console.log(response.data);
         setBooks(response.data);
       })
       .catch((error) => {
         console.log(error);
+        notification.errorNotification("failed to show the details");
       });
   }, []);
 
   return (
     <div>
       <h2>List of books Registered:</h2>
-      <table>
+      <table class="book-registration-table">
         <thead>
           <tr>
             <th>Book Name</th>

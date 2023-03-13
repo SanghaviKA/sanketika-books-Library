@@ -1,26 +1,31 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
-import "./AssignedBook.css";
+import toast, { Toaster } from "react-hot-toast";
+import "./studentRegister.css";
+import { fetchStudents } from "./apis";
+import { NotificationService } from "./notificationService.js";
+const notification = new NotificationService();
+
 
 const StudentDetails = () => {
   const [students, setStudents] = useState([]);
 
   useEffect(() => {
-    axios
-      .get("http://localhost:4000/api/v1/library/read?tableName=students")
+    fetchStudents()
       .then((response) => {
-        console.log(response.data);
         setStudents(response.data);
       })
       .catch((error) => {
         console.log(error);
+        notification.errorNotification("failed to fetch the details")
       });
   }, []);
 
   return (
     <div>
+    
       <h2>List of Students Registered:</h2>
-      <table>
+      <Toaster/>
+      <table class="student-registration-table">
         <thead>
           <tr>
             <th>Student Name</th>
